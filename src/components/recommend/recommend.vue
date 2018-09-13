@@ -21,7 +21,7 @@
 
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
-  import {getRecommend} from 'api/recommend'
+  import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   export default {
     data() {
@@ -32,6 +32,7 @@
     },
     created() {
       this._getRecommend()
+      this._getDiscList()
     },
     methods: {
       _getRecommend() {
@@ -41,7 +42,16 @@
           }
         }, (res) => {
           console.log('failure')
-        }).catch(function(error) {
+        }).catch((error) => {
+          console.log('发生错误！', error);
+        })
+      },
+      _getDiscList() {
+        getDiscList().then((res) => {
+          if (res.code === ERR_OK) {
+            this.discList = res.data.list
+          }
+        }).catch((error) => {
           console.log('发生错误！', error);
         })
       },

@@ -15,7 +15,8 @@ export function getRecommend() {
 }
 
 export function getDiscList() {
-  const url = '/api/getDiscList'
+  //const url = '/api/getDiscList'
+  const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
 
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
@@ -29,11 +30,13 @@ export function getDiscList() {
     format: 'json'
   })
 
-  return axios.get(url, {
-    params: data
-  }).then((res) => {
-    return Promise.resolve(res.data)
-  })
+  return jsonp(url, data, options)
+
+  // return axios.get(url, {
+  //   params: data
+  // }).then((res) => {
+  //   return Promise.resolve(res.data)
+  // })
 }
 
 export function getSongList(disstid) {
