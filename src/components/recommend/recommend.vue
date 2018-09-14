@@ -1,26 +1,38 @@
 <template>
   <div class="recommend" ref="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper">
-        <slider>
-          <div v-for="item in recommends">
-            <a :href="item.linkUrl">
-              <img class="needsclick" :src="item.picUrl">
-            </a>
-          </div>
-        </slider>
+    <scroll ref="scroll"  class="recommend-content" :data="discList">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <slider>
+            <div v-for="item in recommends">
+              <a :href="item.linkUrl">
+                <img class="needsclick" :src="item.picUrl" @load="loadImage">
+              </a>
+            </div>
+          </slider>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li @click="selectItem(item)" v-for="item in discList" class="item">
+              <div class="icon">
+                <img width="60" height="60" :src="item.picUrl">
+              </div>
+              <div class="text">
+                <h2 class="name" v-html="item.songListAuthor"></h2>
+                <p class="desc" v-html="item.songListDesc"></p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="recommend-list">
-      <h1 class="list-title">热门歌单推荐</h1>
-      <ul>
-      </ul>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
+  import scroll from 'base/scroll/scroll'
   import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   export default {
@@ -32,13 +44,14 @@
     },
     created() {
       this._getRecommend()
-      this._getDiscList()
+      //this._getDiscList()
     },
     methods: {
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             this.recommends = res.data.slider;
+            this.discList = res.data.songList;
           }
         }, (res) => {
           console.log('failure')
@@ -55,9 +68,16 @@
           console.log('发生错误！', error);
         })
       },
+      loadImage() {
+        if (!this.checkloaded) {
+          this.checkloaded = true
+          this.$refs.scroll.refresh()
+        }
+      },
     },
     components: {
       Slider,
+      scroll
     }
   }
 </script>
