@@ -16,7 +16,7 @@
           <ul>
             <li @click="selectItem(item)" v-for="item in discList" class="item">
               <div class="icon">
-                <img width="60" height="60" :src="item.picUrl">
+                <img width="60" height="60" v-lazy="item.picUrl">
               </div>
               <div class="text">
                 <h2 class="name" v-html="item.songListAuthor"></h2>
@@ -26,6 +26,9 @@
           </ul>
         </div>
       </div>
+      <div class="loading-container" v-show="!discList.length">
+        <loading :title="title"></loading>
+      </div>
     </scroll>
   </div>
 </template>
@@ -33,13 +36,15 @@
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
   import scroll from 'base/scroll/scroll'
+  import loading from 'base/loading/loading'
   import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   export default {
     data() {
       return {
         recommends: [],
-        discList: []
+        discList: [],
+        title: '加油加载中'
       }
     },
     created() {
@@ -77,7 +82,8 @@
     },
     components: {
       Slider,
-      scroll
+      scroll,
+      loading
     }
   }
 </script>

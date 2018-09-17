@@ -6,18 +6,18 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import ListView from 'base/listview/listview'
+  //import ListView from 'base/listview/listview'
   import {getSingerList} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
-  import {mapMutations} from 'vuex'
-  import {playlistMixin} from 'common/js/mixin'
+  //import {mapMutations} from 'vuex'
+  //import {playlistMixin} from 'common/js/mixin'
 
   const HOT_SINGER_LEN = 10
   const HOT_NAME = '热门'
 
   export default {
-    mixins: [playlistMixin],
+    //mixins: [playlistMixin],
     data() {
       return {
         singers: []
@@ -71,6 +71,7 @@
             id: item.Fsinger_mid
           }))
         })
+
         // 为了得到有序列表，我们需要处理 map
         let ret = []
         let hot = []
@@ -87,12 +88,12 @@
         })
         return hot.concat(ret)
       },
-      ...mapMutations({
-        setSinger: 'SET_SINGER'
-      })
+//      ...mapMutations({
+//        setSinger: 'SET_SINGER'
+//      })
     },
     components: {
-      ListView
+      //ListView
     }
   }
 
