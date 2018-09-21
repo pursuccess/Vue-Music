@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import recommend from 'components/recommend/recommend'
 import singer from 'components/singer/singer'
-// import rank from 'components/rank/rank'
+import rank from 'components/rank/rank'
 // import search from 'components/search/search'
 
 Vue.use(Router)
@@ -26,12 +26,12 @@ export default new Router({
       name: 'singer',
       component: singer
     },
-    // {
-    //   // 页
-    //   path: '/rank',
-    //   name: 'rank',
-    //   component: rank
-    // },
+    {
+      // 页
+      path: '/rank',
+      name: 'rank',
+      component: rank
+    },
     // {
     //   // 搜索页
     //   path: '/search',
