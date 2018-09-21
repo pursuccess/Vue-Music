@@ -6,7 +6,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  //import ListView from 'base/listview/listview'
+  import ListView from 'base/listview/listview'
   import {getSingerList} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
@@ -93,7 +93,7 @@
 //      })
     },
     components: {
-      //ListView
+      ListView
     }
   }
 
