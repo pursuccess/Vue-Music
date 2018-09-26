@@ -10,7 +10,7 @@
   import {getSingerList} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
-  //import {mapMutations} from 'vuex'
+  import {mapMutations} from 'vuex'
   //import {playlistMixin} from 'common/js/mixin'
 
   const HOT_SINGER_LEN = 10
@@ -88,9 +88,9 @@
         })
         return hot.concat(ret)
       },
-//      ...mapMutations({
-//        setSinger: 'SET_SINGER'
-//      })
+      ...mapMutations({
+        setSinger: 'SET_SINGER'
+      })
     },
     components: {
       ListView
