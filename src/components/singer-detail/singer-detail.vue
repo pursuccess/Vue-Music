@@ -1,11 +1,11 @@
 <template>
   <transition name="slide">
-abc
+    <music-list :songs="songs" :title="title" :bgImage="bgImage"></music-list>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-//  import MusicList from 'components/music-list/music-list'
+  import MusicList from 'components/music-list/music-list'
   import {getSingerDetail} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
@@ -40,7 +40,6 @@ abc
         getSingerDetail(this.singer.id).then((res) => {
           if (res.code === ERR_OK) {
             this.songs = this._normalizeSongs(res.data.list)
-            console.log(this.songs)
           }
         })
       },
@@ -56,7 +55,7 @@ abc
       }
     },
     components: {
-      //MusicList
+      MusicList
     }
   }
 </script>
