@@ -62,6 +62,7 @@
         </div>
       </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url"></audio>
   </div>
 </template>
 
@@ -100,6 +101,13 @@
         'playlist',
         'currentSong'
       ])
+    },
+    watch: {
+      currentSong(oldVal, newVal) {
+        this.$nextTick(() => {
+          this.$refs.audio.play()
+        })
+      }
     },
     created() {
 
