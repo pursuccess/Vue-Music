@@ -15,7 +15,7 @@
         <div class="middle">
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img class="image" :src="currentSong.image">
               </div>
             </div>
@@ -27,19 +27,19 @@
         <div class="bottom">
           <div class="operators">
             <div class="icon i-left" @click="">
-              <i :class=""></i>
+              <i class="icon-sequence"></i>
             </div>
             <div class="icon i-left" :class="">
               <i @click="" class="icon-prev"></i>
             </div>
             <div class="icon i-center" :class="">
-              <i @click="" :class=""></i>
+              <i @click="togglePlaying" :class="playIcon"></i>
             </div>
             <div class="icon i-right" :class="">
               <i @click="" class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <i @click="" class="icon" :class=""></i>
+              <i @click="" class="icon icon-not-favorite" :class=""></i>
             </div>
           </div>
         </div>
@@ -48,14 +48,16 @@
     <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img :class="" width="40" height="40" :src="currentSong.image">
+          <img :class="cdCls" width="40" height="40" :src="currentSong.image">
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.name"></h2>
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-
+          <div class="progress-circle">
+            <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon" style="position: relative"></i>
+          </div>
         </div>
         <div class="control" @click.stop="">
           <i class="icon-playlist"></i>
@@ -100,12 +102,30 @@
         'playing',
         'playlist',
         'currentSong'
-      ])
+      ]),
+      cdCls() {
+        return this.playing ? 'play' : 'play pause'
+      },
+      playIcon() {
+        return this.playing ? 'icon-pause' : 'icon-play'
+      },
+      miniIcon() {
+        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
     },
     watch: {
-      currentSong(oldVal, newVal) {
+      currentSong: {
+        handler(oldVal, newVal) {
+          this.$nextTick(() => {
+            this.$refs.audio.play()
+          })
+        },
+        deep: true
+      },
+      playing(newPlaying) {
+        const audio = this.$refs.audio
         this.$nextTick(() => {
-          this.$refs.audio.play()
+          newPlaying ? audio.play() : audio.pause()
         })
       }
     },
@@ -174,8 +194,12 @@
           scale
         }
       },
+      togglePlaying() {
+        this.setPlayingState(!this.playing)
+      },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN'
+        setFullScreen: 'SET_FULL_SCREEN',
+        setPlayingState: 'SET_PLAYING_STATE'
       }),
     },
     components: {
