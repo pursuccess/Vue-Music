@@ -30,13 +30,13 @@
               <i class="icon-sequence"></i>
             </div>
             <div class="icon i-left" :class="">
-              <i @click="" class="icon-prev"></i>
+              <i @click="prev" class="icon-prev"></i>
             </div>
             <div class="icon i-center" :class="">
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
             <div class="icon i-right" :class="">
-              <i @click="" class="icon-next"></i>
+              <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
               <i @click="" class="icon icon-not-favorite" :class=""></i>
@@ -64,7 +64,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" ></audio>
   </div>
 </template>
 
@@ -115,7 +115,7 @@
     },
     watch: {
       currentSong: {
-        handler(oldVal, newVal) {
+        handler(newVal, oldVal) {
           this.$nextTick(() => {
             this.$refs.audio.play()
           })
@@ -197,9 +197,48 @@
       togglePlaying() {
         this.setPlayingState(!this.playing)
       },
+      next() {
+        console.log(this.songReady);
+        if (!this.songReady) {
+          return
+        }
+        let index = this.currentIndex + 1
+        if (index === this.playlist.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        this.setCurrentSong()
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+        this.songReady = false
+      },
+      prev() {
+        if (!this.songReady) {
+          return
+        }
+        let index = this.currentIndex - 1
+        if (index === -1) {
+          index = this.playlist.length - 1
+        }
+        this.setCurrentIndex(index)
+        this.setCurrentSong()
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+        this.songReady = false
+      },
+      ready() {
+        this.songReady = true
+      },
+      error() {
+        this.songReady = true
+      },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
-        setPlayingState: 'SET_PLAYING_STATE'
+        setPlayingState: 'SET_PLAYING_STATE',
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setCurrentSong: 'SET_CURRENT_SONG'
       }),
     },
     components: {
