@@ -33,8 +33,8 @@
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left" @click="">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="">
               <i @click="prev" class="icon-prev"></i>
@@ -71,7 +71,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -81,8 +81,9 @@
   import {prefixStyle} from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
-  //import {playMode} from 'common/js/config'
-  //import Lyric from 'lyric-parser'
+  import {playMode} from 'common/js/config'
+  import {shuffle} from 'common/js/util'
+  import Lyric from 'lyric-parser'
   //import Scroll from 'base/scroll/scroll'
   //import {playerMixin} from 'common/js/mixin'
   //import Playlist from 'components/playlist/playlist'
@@ -108,7 +109,9 @@
         'fullScreen',
         'playing',
         'playlist',
-        'currentSong'
+        'currentSong',
+        'mode',
+        'sequenceList'
       ]),
       cdCls() {
         return this.playing ? 'play' : 'play pause'
@@ -119,6 +122,9 @@
       miniIcon() {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
       },
+      iconMode() {
+        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+      },
       percent() {
         return this.currentTime / this.currentSong.duration
       },
@@ -126,8 +132,10 @@
     watch: {
       currentSong: {
         handler(newVal, oldVal) {
+          console.log(newVal)
           this.$nextTick(() => {
             this.$refs.audio.play()
+            this.getLyric()
           })
         },
         deep: true
@@ -243,6 +251,17 @@
       error() {
         this.songReady = true
       },
+      end() {
+        if (this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
+        }
+      },
+      loop() {
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
+      },
       updateTime(e) {
         this.currentTime = e.target.currentTime
       },
@@ -270,11 +289,44 @@
 //          this.currentLyric.seek(currentTime * 1000)
 //        }
       },
+      changeMode() {
+        const mode = (this.mode + 1) % 3
+        this.setPlayMode(mode)
+        let list = null
+        if (mode === playMode.random) {
+          list = shuffle(this.sequenceList)
+        }
+        else {
+          list = this.sequenceList
+        }
+        this.setPlayList(list)
+      },
+      getLyric() {
+        this.currentSong.getLyric().then((lyric) => {
+          console.log(lyric)
+          this.currentLyric = new Lyric(lyric)
+          console.log(this.currentlyric)
+//          if (this.currentSong.lyric !== lyric) {
+//            return
+//          }
+//          this.currentLyric = new Lyric(lyric, this.handleLyric)
+//          if (this.playing) {
+//            this.currentLyric.play()
+//          }
+        })
+//          .catch(() => {
+//          this.currentLyric = null
+//          this.playingLyric = ''
+//          this.currentLineNum = 0
+//        })
+      },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayingState: 'SET_PLAYING_STATE',
         setCurrentIndex: 'SET_CURRENT_INDEX',
-        setCurrentSong: 'SET_CURRENT_SONG'
+        setCurrentSong: 'SET_CURRENT_SONG',
+        setPlayMode: 'SET_PLAY_MODE',
+        setPlayList: 'SET_PLAYLIST'
       }),
     },
     components: {
