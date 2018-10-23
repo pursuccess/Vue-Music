@@ -16,11 +16,11 @@
           <ul>
             <li @click="selectItem(item)" v-for="item in discList" class="item">
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.picUrl">
+                <img width="60" height="60" v-lazy="item.imgurl">
               </div>
               <div class="text">
-                <h2 class="name" v-html="item.songListAuthor"></h2>
-                <p class="desc" v-html="item.songListDesc"></p>
+                <h2 class="name" v-html="item.creator.name"></h2>
+                <p class="desc" v-html="item.dissname"></p>
               </div>
             </li>
           </ul>
@@ -30,6 +30,7 @@
         <loading :title="title"></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -40,6 +41,7 @@
   import {getRecommend, getDiscList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   import {playlistMixin} from 'common/js/mixin'
+  import {mapMutations} from 'vuex'
   export default {
     mixins: [playlistMixin],
     data() {
@@ -51,7 +53,7 @@
     },
     created() {
       this._getRecommend()
-      //this._getDiscList()
+      this._getDiscList()
     },
     methods: {
       handlePlaylist(playlist) {
@@ -63,7 +65,7 @@
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             this.recommends = res.data.slider;
-            this.discList = res.data.songList;
+            //this.discList = res.data.songList;
           }
         }, (res) => {
           console.log('failure')
@@ -86,6 +88,16 @@
           this.$refs.scroll.refresh()
         }
       },
+      selectItem(item) {
+        console.log(item)
+        this.$router.push({
+          path: `/recommend/${item.dissid}`
+        })
+        this.setDisc(item)
+      },
+      ...mapMutations({
+        setDisc: 'SET_DISC'
+      })
     },
     components: {
       Slider,

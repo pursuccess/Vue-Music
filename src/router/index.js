@@ -4,6 +4,7 @@ import recommend from 'components/recommend/recommend'
 import singer from 'components/singer/singer'
 import singerDetail from 'components/singer-detail/singer-detail'
 import rank from 'components/rank/rank'
+import disc from 'components/disc/disc'
 // import search from 'components/search/search'
 
 Vue.use(Router)
@@ -19,7 +20,13 @@ export default new Router({
       // 推荐
       path: '/recommend',
       name: 'recommend',
-      component: recommend
+      component: recommend,
+      children: [
+        {
+          path: ':id',
+          component: disc
+        }
+      ]
     },
     {
       // 歌手页

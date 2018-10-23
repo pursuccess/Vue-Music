@@ -17,3 +17,5 @@ export const currentIndex = state => state.currentIndex
 }*/
 
 export const currentSong = state => state.currentSong
+
+export const disc = state => state.disc
