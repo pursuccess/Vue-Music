@@ -1,4 +1,4 @@
-import {getLyric} from 'api/song'
+import {getLyric, getSongsUrl} from 'api/song'
 import {ERR_OK} from 'api/config'
 import {Base64} from 'js-base64'
 
@@ -45,6 +45,23 @@ export function createSong(musicData) {
   })
 }
 
+export function processSongsUrl(songs) {
+  if (!songs.length) {
+    return Promise.resolve(songs)
+  }
+  return getSongsUrl(songs).then((res) => {
+    if (res.code === ERR_OK) {
+      let midUrlInfo = res.url_mid.data.midurlinfo
+      midUrlInfo.forEach((info, index) => {
+        let song = songs[index]
+        // song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`;
+        song.url = `${info.purl}`
+      })
+    }
+    return songs
+  })
+}
+
 function filterSinger(singer) {
   let ret = []
   if (!singer) {
@@ -55,4 +72,3 @@ function filterSinger(singer) {
   })
   return ret.join('/')
 }
-

@@ -245,7 +245,7 @@
             index = 0
           }
           this.setCurrentIndex(index)
-          this.setCurrentSong()
+          //this.setCurrentSong()
           if (!this.playing) {
             this.togglePlaying()
           }
@@ -265,7 +265,7 @@
             index = this.playlist.length - 1
           }
           this.setCurrentIndex(index)
-          this.setCurrentSong()
+          //this.setCurrentSong()
           if (!this.playing) {
             this.togglePlaying()
           }

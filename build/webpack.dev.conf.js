@@ -10,6 +10,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const bodyParser = require('body-parser')
+
 var axios = require('axios')
 
 const HOST = process.env.HOST
@@ -50,6 +52,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       poll: config.dev.poll,
     },
     before(app) {
+      // 热门歌单推荐列表
       app.get('/api/getDiscList', function (req, res) {
         var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
         axios.get(url, {
@@ -65,6 +68,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      //歌词
       app.get('/api/lyric', function (req, res) {
         var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
 
@@ -89,6 +93,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      // 推荐歌单详情页获取歌单
       app.get('/api/getSongList', function (req, res) {
         var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
 
@@ -109,6 +114,21 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           }
           res.json(ret)
         }).catch((e) => {
+          console.log(e)
+        })
+      })
+
+      app.post('/api/getPurlUrl', bodyParser.json(), function (req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.post(url, req.body, {
+          headers: {
+            referer: 'https://y.qq.com/',
+            origin: 'https://y.qq.com',
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => {
+          res.json(response.data)
+        }).catch(e => {
           console.log(e)
         })
       })
