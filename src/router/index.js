@@ -5,6 +5,7 @@ import singer from 'components/singer/singer'
 import singerDetail from 'components/singer-detail/singer-detail'
 import rank from 'components/rank/rank'
 import disc from 'components/disc/disc'
+import topList from 'components/top-list/top-list'
 // import search from 'components/search/search'
 
 Vue.use(Router)
@@ -44,7 +45,13 @@ export default new Router({
       // 页
       path: '/rank',
       name: 'rank',
-      component: rank
+      component: rank,
+      children: [
+        {
+          path: ':id',
+          component: topList
+        }
+      ]
     },
     // {
     //   // 搜索页
