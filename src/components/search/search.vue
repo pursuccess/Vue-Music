@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll :refreshDelay="refreshDelay" ref="shortcut" class="shortcut" :data="shortcut">
+      <scroll ref="shortcut" class="shortcut" :data="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -26,8 +26,8 @@
         </div>
       </scroll>
     </div>
-    <div class="search-result" v-show="query" ref="searchResult">
-      <suggest @listScroll="blurInput" @select="saveSearch" ref="suggest" :query="query"></suggest>
+    <div class="search-result" ref="searchResult" v-show="query">
+      <suggest ref="suggest" @listScroll="blurInput" :query="query" @select="saveSearch"></suggest>
     </div>
     <confirm ref="confirm" @confirm="clearSearchHistory" text="是否清空所有搜索历史" confirmBtnText="清空"></confirm>
     <router-view></router-view>
@@ -42,20 +42,24 @@
   import Suggest from 'components/suggest/suggest'
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
-  import {playlistMixin, searchMixin} from 'common/js/mixin'
-  import {mapActions} from 'vuex'
+  import {playlistMixin} from 'common/js/mixin'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
-    mixins: [playlistMixin, searchMixin],
+    mixins: [playlistMixin],
     data() {
       return {
-        hotKey: []
+        hotKey: [],
+        query: '',
       }
     },
     computed: {
       shortcut() {
         return this.hotKey.concat(this.searchHistory)
-      }
+      },
+      ...mapGetters([
+        'searchHistory'
+      ])
     },
     created() {
       this._getHotKey()
@@ -80,7 +84,21 @@
           }
         })
       },
+      addQuery(query) {
+        this.$refs.searchBox.setQuery(query)
+      },
+      onQueryChange(query) {
+        this.query = query
+      },
+      blurInput() {
+        this.$refs.searchBox.blur()
+      },
+      saveSearch() {
+        this.saveSearchHistory(this.query)
+      },
       ...mapActions([
+        'saveSearchHistory',
+        'deleteSearchHistory',
         'clearSearchHistory'
       ])
     },

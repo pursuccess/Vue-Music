@@ -143,7 +143,6 @@
     watch: {
       currentSong: {
         handler(newVal, oldVal) {
-          console.log(newVal)
           if (this.currentLyric) {
             this.currentLyric.stop()
           }
@@ -336,9 +335,7 @@
 //          if (this.currentSong.lyric !== lyric) {
 //            return
 //          }
-          console.log(lyric)
           this.currentLyric = new Lyric(lyric, this.handleLyric)
-          console.log(this.currentLyric)
           if (this.playing) {
             this.currentLyric.play()
           }
