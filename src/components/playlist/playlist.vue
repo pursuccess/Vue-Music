@@ -4,7 +4,7 @@
       <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
-            <i class="icon" @click=""></i>
+            <i class="icon" :class="iconMode" @click="changeMode"></i>
             <span class="text">{{modeText}}</span>
             <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
@@ -46,10 +46,10 @@
   import Scroll from 'base/scroll/scroll'
   import Confirm from 'base/confirm/confirm'
   //import AddSong from 'components/add-song/add-song'
-  //import {playerMixin} from 'common/js/mixin'
+  import {playerMixin} from 'common/js/mixin'
 
   export default {
-    //mixins: [playerMixin],
+    mixins: [playerMixin],
     data() {
       return {
         showFlag: false,
@@ -60,12 +60,6 @@
       modeText() {
         return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
       },
-      ...mapGetters([
-        'sequenceList',
-        'playlist',
-        'currentSong',
-        'mode'
-      ])
     },
     methods: {
       show() {
@@ -115,10 +109,6 @@
       addSong() {
         this.$refs.addSong.show()
       },
-      ...mapMutations({
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayingState: 'SET_PLAYING_STATE',
-      }),
       ...mapActions([
         'deleteSong',
         'deleteSongList'
