@@ -35,7 +35,7 @@
         </div>
       </div>
       <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
-      <!--<add-song ref="addSong"></add-song>-->
+      <add-song ref="addSong"></add-song>
     </div>
   </transition>
 </template>
@@ -45,7 +45,7 @@
   import {playMode} from 'common/js/config'
   import Scroll from 'base/scroll/scroll'
   import Confirm from 'base/confirm/confirm'
-  //import AddSong from 'components/add-song/add-song'
+  import AddSong from 'components/add-song/add-song'
   import {playerMixin} from 'common/js/mixin'
 
   export default {
@@ -53,13 +53,13 @@
     data() {
       return {
         showFlag: false,
-        refreshDelay: 120
+        refreshDelay: 20
       }
     },
     computed: {
       modeText() {
         return this.mode === playMode.sequence ? '顺序播放' : this.mode === playMode.random ? '随机播放' : '单曲循环'
-      },
+      }
     },
     methods: {
       show() {
@@ -125,7 +125,7 @@
     components: {
       Scroll,
       Confirm,
-      //AddSong
+      AddSong
     }
   }
 </script>

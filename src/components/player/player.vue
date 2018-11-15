@@ -94,7 +94,6 @@
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
   import {playMode} from 'common/js/config'
-  import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
   import {playerMixin} from 'common/js/mixin'
@@ -287,6 +286,7 @@
       },
       ready() {
         this.songReady = true
+        this.savePlayHistory(this.currentSong)
       },
       error() {
         this.songReady = true
@@ -416,7 +416,10 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         //setCurrentSong: 'SET_CURRENT_SONG',
-      })
+      }),
+      ...mapActions([
+        'savePlayHistory'
+      ])
     },
     components: {
       ProgressBar,
