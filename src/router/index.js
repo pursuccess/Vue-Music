@@ -7,6 +7,7 @@ import rank from 'components/rank/rank'
 import disc from 'components/disc/disc'
 import topList from 'components/top-list/top-list'
 import search from 'components/search/search'
+import userCenter from 'components/user-center/user-center'
 
 Vue.use(Router)
 
@@ -64,6 +65,12 @@ export default new Router({
           component: singerDetail
         }
       ]
+    },
+    {
+      // 搜索页
+      path: '/user',
+      name: 'userCenter',
+      component: userCenter,
     }
   ]
 })
