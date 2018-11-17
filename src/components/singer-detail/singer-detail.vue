@@ -39,8 +39,7 @@
         }
         getSingerDetail(this.singer.id).then((res) => {
           if (res.code === ERR_OK) {
-            let normalList = this._normalizeSongs(res.data.list)
-            processSongsUrl(normalList).then(songs => {
+            processSongsUrl(this._normalizeSongs(res.data.list)).then(songs => {
               this.songs = songs
             })
           }

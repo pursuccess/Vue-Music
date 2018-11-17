@@ -9,7 +9,7 @@
   import {getSongList} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   import {mapGetters} from 'vuex'
-  import {createSong} from 'common/js/song'
+  import {createSong, processSongsUrl} from 'common/js/song'
 
   export default {
     computed: {
@@ -39,7 +39,9 @@
         }
         getSongList(this.disc.dissid).then((res) => {
           if (res.code === ERR_OK) {
-            this.songs = this._normalizeSongs(res.cdlist[0].songlist)
+            processSongsUrl(this._normalizeSongs(res.cdlist[0].songlist)).then((songs) => {
+              this.songs = songs
+            })
           }
         })
       },

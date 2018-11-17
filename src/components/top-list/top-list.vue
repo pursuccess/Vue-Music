@@ -9,7 +9,7 @@
   import {getMusicList} from 'api/rank'
   import {ERR_OK} from 'api/config'
   import {mapGetters} from 'vuex'
-  import {createSong} from 'common/js/song'
+  import {createSong, processSongsUrl} from 'common/js/song'
 
   export default {
     computed: {
@@ -43,7 +43,10 @@
         }
         getMusicList(this.topList.id).then((res) => {
           if (res.code === ERR_OK) {
-            this.songs = this._normalizeSongs(res.songlist)
+            let normalList = this._normalizeSongs(res.songlist)
+            processSongsUrl(normalList).then(songs => {
+              this.songs = songs
+            })
           }
         })
       },
